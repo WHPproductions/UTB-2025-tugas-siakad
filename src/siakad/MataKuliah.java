@@ -7,6 +7,17 @@ public class MataKuliah {
     private String namaMk;
     private int sks;
 
+    // Default Constructor
+    public MataKuliah() {
+    }
+
+    // Complete Parameter Constructor
+    public MataKuliah(String kode_matkul, String namaMk, int sks) {
+        setKode_matkul(kode_matkul);
+        setNamaMk(namaMk);
+        setSks(sks);
+    }
+
     public String getKode_matkul() {
         return kode_matkul;
     }
@@ -29,7 +40,7 @@ public class MataKuliah {
     }
     
     public void setNamaMk(String namaMk) {
-        Pattern pattern = Pattern.compile("/^[A-Za-z]+(?:\\s*[A-Za-z]+)*(?: \\d*)?$/gm");
+        Pattern pattern = Pattern.compile("^[A-Za-z]+(?:\\s*[A-Za-z]+)*(?: \\d*)?$");
         if (!pattern.matcher(namaMk).matches()) {
             System.out.println(
                     "Nama mata kuliah hanya boleh mengandung huruf dan spasi, \n" +
@@ -56,6 +67,6 @@ public class MataKuliah {
     }
 
     public void info() {
-        System.out.println(kode_matkul + " " + namaMk + " (" + sks + ")");
+        System.out.println(kode_matkul + " - " + namaMk + " (" + sks + " SKS)");
     }
 }

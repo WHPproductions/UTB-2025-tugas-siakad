@@ -14,28 +14,53 @@ public class Siakad {
 
     public static void main(String[] args) {
 
+        // Dummy data Mata Kuliah
+        MataKuliah mk1 = new MataKuliah(
+                "TIF001",
+                "Struktur Data 1",
+                3);
+        MataKuliah mk2 = new MataKuliah(
+                "TIF002",
+                "Basis Data",
+                4);
+        MataKuliah mk3 = new MataKuliah(
+                "TIF003",
+                "Pemrograman Web",
+                2);
+
         // Dummy data
         Dosen dsn1 = new Dosen(
                 "1234567890",
                 "Dr. Budi Santoso",
                 "Aktif");
+        List<MataKuliah> krs1 = new ArrayList<>();
+        krs1.add(mk1);
+        krs1.add(mk2);
+        krs1.add(mk3);        
         Mahasiswa mhs1 = new Mahasiswa(
                 "2310001",
                 "Andi Pratama",
                 Mahasiswa.Prodi.TEKNIK_INFORMATIKA,
                 3.75,
-                dsn1);
+                dsn1,
+                krs1
+                );
 
         Dosen dsn2 = new Dosen(
                 "1234567890",
                 "Dr. Budi Santoso",
                 "Aktif");
+        List<MataKuliah> krs2 = new ArrayList<>();
+        krs2.add(mk1);
+        krs2.add(mk3);
         Mahasiswa mhs2 = new Mahasiswa(
                 "24552011280",
                 "Winata Hadi Pratama",
                 Mahasiswa.Prodi.DESAIN_KOMUNIKASI_VISUAL,
                 4,
-                dsn2);
+                dsn2,
+                krs2
+                );
 
         tambahMahasiswa(mhs1);
         tambahMahasiswa(mhs2);
@@ -102,7 +127,7 @@ public class Siakad {
                     System.out.print("Masukkan status Dosen Wali baru: ");
                     String statusDosenBaru = input.nextLine();
                     Dosen dosenWaliBaru = new Dosen(nidnDosenBaru, namaDosenBaru, statusDosenBaru);
-                    mhsToUpdate.dosenWali = dosenWaliBaru;
+                    mhsToUpdate.setDosenWali(dosenWaliBaru);
 
                     System.out.println("Dosen Wali berhasil diperbarui.");
                     mhsToUpdate.tampilData();
@@ -154,12 +179,43 @@ public class Siakad {
                     System.out.print("Status Dosen Wali: ");
                     String statusDosen = input.nextLine();
 
+                    System.out.println("Jumlah Mata Kuliah yang diambil: ");
+                    int jumlahMk = input.nextInt();
+                    List<MataKuliah> krsBaru = new ArrayList<>();
+                    for (int i = 0; i < jumlahMk; i++) {
+                        input.nextLine(); // Consume the newline character
+                        System.out.println("Mata Kuliah ke-" + (i + 1));
+                        System.out.print("Kode Mata Kuliah: ");
+                        String kodeMk = input.nextLine();
+                        System.out.print("Nama Mata Kuliah: ");
+                        String namaMk = input.nextLine();
+                        System.out.print("SKS Mata Kuliah: ");
+                        int sksMk = input.nextInt();
+                        MataKuliah mkBaru = new MataKuliah(kodeMk, namaMk, sksMk);
+                        krsBaru.add(mkBaru);
+                    }
+
                     Dosen dosenWali = new Dosen(nidnDosen, namaDosen, statusDosen);
-                    Mahasiswa newMhs = new Mahasiswa(nim, nama, prodi, ipk, dosenWali);
+                    Mahasiswa newMhs = new Mahasiswa(nim, nama, prodi, ipk, dosenWali, krsBaru);
 
                     System.out.println("Mahasiswa baru berhasil ditambahkan:");
                     newMhs.tampilData();
+                    newMhs.tampilKRS();
                     tambahMahasiswa(newMhs);
+                    break;
+                case 6: // Menu untuk mengelola data krs
+                    input.nextLine(); // Consume the newline character
+                    System.out.print("Masukkan NIM Mahasiswa: ");
+                    String nimYangDicari = input.nextLine();
+                    Mahasiswa updatedMhs = cariMahasiswaByNIM(nimYangDicari);
+                    if (updatedMhs == null) {
+                        System.out.println("Mahasiswa dengan NIM " + nimYangDicari + " tidak ditemukan.");
+                        break;
+                    } else {
+                        System.out.println("Mahasiswa yang akan dikelola KRS-nya:");
+                        updatedMhs.tampilData();
+                        menuPengelolaanKRS(updatedMhs);
+                    }
                     break;
                 default: // Invalid choice
                     System.out.println("Pilihan tidak valid. Silakan coba lagi.");
@@ -167,22 +223,6 @@ public class Siakad {
             }
         }
         input.close();
-
-        // listMhs.add(mhs1);
-
-        // mhs1.tampilData();
-
-        // mhs1.predikatIPK();
-
-        // System.out.println("===============================");
-
-        // listMhs.add(mhs2);
-
-        // mhs2.tampilData();
-
-        // mhs2.predikatIPK();
-
-        // System.out.println("===============================");
     }
 
     public static void showMenu() {
@@ -193,6 +233,7 @@ public class Siakad {
         System.out.println("3. Menghitung rata-rata IPK");
         System.out.println("4. Mengganti dosen wali");
         System.out.println("5. Menambah siswa baru");
+        System.out.println("6. Buka Menu Pengelolaan KRS Mahasiswa");
         System.out.print("Pilih menu: ");
     }
 
@@ -209,7 +250,7 @@ public class Siakad {
 
     public static Mahasiswa cariMahasiswaByNIM(String nim) {
         for (Mahasiswa mhs : listMhs) {
-            if (mhs.nim.equals(nim)) {
+            if (mhs.getNim().equals(nim)) {
                 return mhs;
             }
         }
@@ -219,9 +260,83 @@ public class Siakad {
     public static double rataRataIPK(List<Mahasiswa> list) {
         double totalIpk = 0;
         for (Mahasiswa mhs : list) {
-            totalIpk += mhs.ipk;
+            totalIpk += mhs.getIpk();
         }
         double rataRata = totalIpk / list.size();
         return rataRata;
+    }
+
+    public static void menuPengelolaanKRS(Mahasiswa mhs) {
+        Scanner input = new Scanner(System.in);
+        Boolean kembaliKeMenuUtama = false;
+
+        while (!kembaliKeMenuUtama) {
+            System.out.println("=== Pengelolaan KRS Mahasiswa ===");
+            System.out.println("1. Tambah Mata Kuliah ke KRS");
+            System.out.println("2. Hapus Mata Kuliah dari KRS");
+            System.out.println("3. Lihat KRS Mahasiswa");
+            System.out.println("0. Kembali ke Menu Utama");
+            System.out.print("Pilih menu: ");
+            int choice = input.nextInt();
+            input.nextLine(); // Consume the newline character
+
+            switch (choice) {
+                case 1: // add Mata Kuliah
+                    System.out.println("Masukkan kode mata kuliah: ");
+                    String kodeMk = input.nextLine();
+                    System.out.println("Masukkan nama mata kuliah: ");
+                    String namaMk = input.nextLine();
+                    System.out.println("Masukkan jumlah SKS mata kuliah: ");
+                    int sksMk = input.nextInt();
+                    input.nextLine(); // Consume the newline character
+
+                    if (kodeMk == null || namaMk == null) {
+                        System.out.println("Terjadi kesalahan, kode atau nama mata kuliah tidak benar.");
+                        break;
+                    }
+
+                    if (sksMk < 1 || sksMk > 6) {
+                        System.out.println(
+                        "SKS harus diantara rentang 1 sampai 6 secara inklusif"
+                        );
+                        break;
+                    }
+
+                    // validasi jika ada kode mata kuliah yang sama
+                    boolean isDuplicate = false;
+                    for (MataKuliah mk : mhs.getKrs()) {
+                        if (mk.getKode_matkul().equals(kodeMk)) {
+                            System.out.println("Mata kuliah dengan kode " + kodeMk + " sudah terdaftar!");
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+                    if (isDuplicate) {
+                        break;
+                    }
+
+                    MataKuliah mkBaru = new MataKuliah(kodeMk, namaMk, sksMk);
+                    mhs.tambahMataKuliah(mkBaru);
+
+                    System.out.println("Mata kuliah berhasil ditambahkan:");
+                    mkBaru.info();
+                    break;
+                case 2:
+                    // Logic to remove Mata Kuliah
+                    System.out.println("Masukkan kode mata kuliah yang akan dihapus: ");
+                    String kodeMkHapus = input.nextLine();
+                    mhs.hapusMataKuliah(kodeMkHapus);
+                    break;
+                case 3:
+                    mhs.tampilKRS();
+                    break;
+                case 0:
+                    kembaliKeMenuUtama = true;
+                    break;
+                default:
+                    System.out.println("Pilihan tidak valid. Silakan coba lagi.");
+                    break;
+            }
+        }
     }
 }
