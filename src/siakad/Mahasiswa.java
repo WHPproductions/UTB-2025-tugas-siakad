@@ -3,7 +3,7 @@ package siakad;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class Mahasiswa {
+public abstract class Mahasiswa implements KRSManager {
     enum Prodi {
         TEKNIK_INDUSTRI,
         TEKNIK_INFORMATIKA,
@@ -193,7 +193,7 @@ public class Mahasiswa {
         return this;
     }
 
-    void tambahMataKuliah(MataKuliah mk) {
+    public void tambahMataKuliah(MataKuliah mk) {
         // validasi duplikasi mata kuliah
         if (this.krs.contains(mk)) {
             System.out.println("Mata kuliah dengan kode " + mk.getKode_matkul() + " sudah ada di KRS.");
@@ -214,7 +214,7 @@ public class Mahasiswa {
         this.krs.add(mk);
     }
 
-    void hapusMataKuliah(String kodeMK) {
+    public void hapusMataKuliah(String kodeMK) {
         Boolean isDeleted = this.krs.removeIf(mk -> mk.getKode_matkul().equals(kodeMK));
         if (!isDeleted) {
             System.out.println("Mata Kuliah dengan kode " + kodeMK + " tidak ditemukan.");
@@ -223,7 +223,7 @@ public class Mahasiswa {
         }
     }
 
-    void tampilKRS() {
+    public void tampilKRS() {
         System.out.println("Mata Kuliah yang diambil:");
         int totalSks = 0;
         for (MataKuliah mk : krs) {

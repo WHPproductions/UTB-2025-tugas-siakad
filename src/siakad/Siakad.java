@@ -36,14 +36,16 @@ public class Siakad {
         List<MataKuliah> krs1 = new ArrayList<>();
         krs1.add(mk1);
         krs1.add(mk2);
-        krs1.add(mk3);        
-        Mahasiswa mhs1 = new Mahasiswa(
+        krs1.add(mk3);
+        String[] rencanaRuangKelas = new String[]{"R101", "R102", "R103"};
+        Mahasiswa mhs1 = new MahasiswaOffline(
                 "2310001",
                 "Andi Pratama",
                 Mahasiswa.Prodi.TEKNIK_INFORMATIKA,
                 3.75,
                 dsn1,
-                krs1
+                krs1,
+                rencanaRuangKelas
                 );
 
         Dosen dsn2 = new Dosen(
@@ -53,7 +55,7 @@ public class Siakad {
         List<MataKuliah> krs2 = new ArrayList<>();
         krs2.add(mk1);
         krs2.add(mk3);
-        Mahasiswa mhs2 = new Mahasiswa(
+        Mahasiswa mhs2 = new MahasiswaOnline(
                 "24552011280",
                 "Winata Hadi Pratama",
                 Mahasiswa.Prodi.DESAIN_KOMUNIKASI_VISUAL,
@@ -196,7 +198,7 @@ public class Siakad {
                     }
 
                     Dosen dosenWali = new Dosen(nidnDosen, namaDosen, statusDosen);
-                    Mahasiswa newMhs = new Mahasiswa(nim, nama, prodi, ipk, dosenWali, krsBaru);
+                    Mahasiswa newMhs = new MahasiswaOnline(nim, nama, prodi, ipk, dosenWali, krsBaru);
 
                     System.out.println("Mahasiswa baru berhasil ditambahkan:");
                     newMhs.tampilData();
