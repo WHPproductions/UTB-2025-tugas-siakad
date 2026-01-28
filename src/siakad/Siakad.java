@@ -28,11 +28,12 @@ public class Siakad {
                 "Pemrograman Web",
                 2);
 
-        // Dummy data
-        Dosen dsn1 = new Dosen(
-                "1234567890",
+        // Dummy data - Dosen Tetap
+        Dosen dsn1 = new DosenTetap(
                 "Dr. Budi Santoso",
-                "Aktif");
+                "1234567890",
+                "Aktif",
+                "Gedung A, Ruang 201");
         List<MataKuliah> krs1 = new ArrayList<>();
         krs1.add(mk1);
         krs1.add(mk2);
@@ -48,10 +49,12 @@ public class Siakad {
                 rencanaRuangKelas
                 );
 
-        Dosen dsn2 = new Dosen(
-                "1234567890",
+        // Dummy data - Dosen Honorer
+        Dosen dsn2 = new DosenHonorer(
                 "Dr. Budi Santoso",
-                "Aktif");
+                "1234567890",
+                "Aktif",
+                "Universitas XYZ");
         List<MataKuliah> krs2 = new ArrayList<>();
         krs2.add(mk1);
         krs2.add(mk3);
@@ -66,6 +69,11 @@ public class Siakad {
 
         tambahMahasiswa(mhs1);
         tambahMahasiswa(mhs2);
+
+        // ===== DEMONSTRASI ABSEN DOSEN =====
+        System.out.println("\n========== DEMONSTRASI ABSEN DOSEN ==========\n");
+        dsn1.absen("08:00", "Tepat Waktu");
+        dsn2.absen("09:30", "Agak Terlambat");
 
         // Jika pengguna ingin keluar dari menu
         Boolean exit = false;
@@ -128,7 +136,7 @@ public class Siakad {
                     String nidnDosenBaru = input.nextLine();
                     System.out.print("Masukkan status Dosen Wali baru: ");
                     String statusDosenBaru = input.nextLine();
-                    Dosen dosenWaliBaru = new Dosen(nidnDosenBaru, namaDosenBaru, statusDosenBaru);
+                    Dosen dosenWaliBaru = new DosenTetap(nidnDosenBaru, namaDosenBaru, statusDosenBaru, null);
                     mhsToUpdate.setDosenWali(dosenWaliBaru);
 
                     System.out.println("Dosen Wali berhasil diperbarui.");
@@ -197,7 +205,7 @@ public class Siakad {
                         krsBaru.add(mkBaru);
                     }
 
-                    Dosen dosenWali = new Dosen(nidnDosen, namaDosen, statusDosen);
+                    Dosen dosenWali = new DosenTetap(nidnDosen, namaDosen, statusDosen, null);
                     Mahasiswa newMhs = new MahasiswaOnline(nim, nama, prodi, ipk, dosenWali, krsBaru);
 
                     System.out.println("Mahasiswa baru berhasil ditambahkan:");

@@ -1,6 +1,6 @@
 package siakad;
 
-public class Dosen {
+public abstract class Dosen {
     String nama;
     String nidn;
     String status_dosen; // e.g. "Aktif", "Tidak Aktif"
@@ -19,6 +19,9 @@ public class Dosen {
         this.nidn = nidn;
         this.status_dosen = status_dosen;
     }
+
+    // Abstract method for attendance
+    public abstract void absen(String jam, String keterangan);
 
     void info() {
         System.out.println("NIDN:\t" + nidn);
